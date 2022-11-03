@@ -1,0 +1,11 @@
+applications:
+  - name: team-calendar
+    path: deployment/
+    buildpacks:
+      - nodejs_buildpack
+    memory: 256M
+    command: node dist/index.js
+    random-route: true
+    services:
+      - my-xsuaa
+      - my-destination

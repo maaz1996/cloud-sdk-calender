@@ -1,0 +1,28 @@
+name: build
+
+on:
+  push:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: npm ci
+      - name: Static code checks
+        run: npm run ci-lint
+      - name: Build
+        run: npm run ci-build
+      - name: Unit tests
+        run: npm run ci-backend-unit-test
+      - name: Integration tests
+        run: npm run ci-it-backend
+      - name: Package
+        run: npm run ci-package
+      - name: Deploy
+        uses: SAP/project-piper-action@install-cf-cli
+        with:
+          command: cloudFoundryDeploy
+        env:
+          PIPER_username: ${{ secrets.CF_USER }}
+          PIPER_password: ${{ secrets.CF_PASSWORD }}

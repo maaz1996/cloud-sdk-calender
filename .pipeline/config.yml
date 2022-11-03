@@ -1,0 +1,34 @@
+###
+# We aim to keep the pipeline configuration as stable as possible. However, major changes might also imply breaking
+# changes in the configuration. Before doing an update, please check the the release notes of all intermediate releases
+# and adapt this file if necessary.
+#
+# This is a YAML-file. YAML is a indentation-sensitive file format. Please make sure to properly indent changes to it.
+###
+
+### General project setup
+# general:
+#   productiveBranch: 'master'
+#   projectName: ''
+
+### Step-specific configuration
+steps:
+  cloudFoundryDeploy:
+    org: 'MY_ORG'
+    space: 'MY_SPACE'
+    apiEndpoint: 'MY_API_ENDPOINT'
+    appName: 'team-calendar'
+    manifest: 'manifest.yml'
+    deployTool: 'cf_native'
+
+### Stage-specific configuration
+stages:
+#  integrationTests:
+#    credentials:
+#      - alias: 'mySystemAlias'
+#        credentialId: 'mySystemCredentialsId'
+
+#  s4SdkQualityChecks:
+#    nonErpDestinations:
+#      - 'myCustomDestination'
+

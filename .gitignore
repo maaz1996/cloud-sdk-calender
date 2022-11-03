@@ -1,0 +1,21 @@
+node_modules
+*.DS_Store
+dist
+*.idea
+/coverage
+/.nyc_output
+/.vscode
+**credentials.json
+/s4hana_pipeline
+deployment/
+srv/gen/
+srv/external/
+*.db
+*.sqlite
+db/src/gen
+scripts/*.js
+
+# added by cds deploy
+default-env.json
+
+.env
