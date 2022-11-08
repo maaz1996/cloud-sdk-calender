@@ -109,11 +109,15 @@
       "db": {
         "kind": "sqlite",
         "credentials": {
-          "database": "db.sqlite"
+          "database": ":memory:"
         }
       },
       "auth": {
         "kind": "dummy-auth"
+      },
+      "ECTimeOff": {
+        "kind": "odata-v2",
+        "model": "srv/external/ECTimeOff"
       }
     }
   }

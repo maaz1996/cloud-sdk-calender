@@ -20,29 +20,24 @@ import {
 export async function readAppointments(
   year: number,
   srv: any,
-  readS4AppointmentsByPersonFn = readS4AppointmentsByPerson,
   readSfsfAppointmentsByPersonFn = readSfsfAppointmentsByPerson
 ): Promise<[{ year: number; appointments: Appointment[] }]> {
   return readPersons(srv)
     .then(persons =>
       Promise.all([
         readLocalAppointments(srv),
-        readRemoteAppointments(
-          readS4AppointmentsByPersonFn,
-          transformS4Appointment
-        )(persons, year),
+       
         readRemoteAppointments(
           readSfsfAppointmentsByPersonFn,
           transformSfsfAppointment
         )(persons, year)
       ])
     )
-    .then(([localAppointments, s4Appointments, sfsfAppointments]) => [
+    .then(([localAppointments, sfsfAppointments]) => [
       {
         year,
         appointments: [
           ...localAppointments,
-          ...s4Appointments,
           ...sfsfAppointments
         ]
       }
@@ -58,7 +53,7 @@ export async function readS4AppointmentsByPerson(
   const to = moment.utc(`${year}-12-31`);
 
   // TODO: Retrieve TimeSheetEntries from SAP S/4HANA here. Use the above variables for filtering.
-  return [];
+ return [];
 }
 
 export async function readSfsfAppointmentsByPerson(
@@ -71,7 +66,26 @@ export async function readSfsfAppointmentsByPerson(
   const to = moment.utc(`${year}-12-31`);
 
   // TODO: Retrieve EmployeeTime from SAP SuccessFactors here. Use the above variables for filtering.
-  return [];
+  const { employeeTimeApi } = ecTimeOffService();
+  return employeeTimeApi
+    .requestBuilder()
+    .getAll()
+    .select(
+      employeeTimeApi.schema.EXTERNAL_CODE,
+      employeeTimeApi.schema.START_TIME,
+      employeeTimeApi.schema.START_DATE,
+      employeeTimeApi.schema.END_TIME,
+      employeeTimeApi.schema.END_DATE,
+      employeeTimeApi.schema.APPROVAL_STATUS,
+      employeeTimeApi.schema.USER_ID
+    )
+    .filter(
+      employeeTimeApi.schema.TIME_TYPE.equals(timeType),
+      employeeTimeApi.schema.USER_ID.equals(personId),
+      employeeTimeApi.schema.START_DATE.greaterOrEqual(from),
+      employeeTimeApi.schema.END_DATE.lessOrEqual(to)
+    )
+    .execute({ destinationName: 'SFSF' });
 }
 
 export async function readLocalAppointments(srv: any): Promise<Appointment[]> {

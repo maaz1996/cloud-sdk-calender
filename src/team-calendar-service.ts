@@ -12,7 +12,6 @@ export function serviceHandler(srv: any): void {
   srv.on('READ', 'TeamCalendar', req => {
     // enfore presence of key (for now)
     const year: number = req.data.year;
-
     if (!year) {
       req.reject(
         400,

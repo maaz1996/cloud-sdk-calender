@@ -5,6 +5,6 @@ namespace my.timesheet;
 
 // 1) The persistence data model
 using from './data-model';
-
 // 2) In addition, generic service providers need views for exposed entities
 using from '../srv/timesheet-service';
+using from '../srv/external/ECTimeOff.csn';
